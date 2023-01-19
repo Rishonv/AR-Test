@@ -1,56 +1,56 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
+// using System;
+// using System.Collections.Generic;
+// using UnityEngine;
+// using UnityEngine.XR.ARFoundation;
+// using UnityEngine.XR.ARSubsystems;
 
-[RequireComponent(typeof(ARTrackedImageManager))]
-public class PlaceTrackedImages : MonoBehaviour {
-    private ARTrackedImageManager _trackedImagesManager;
-    public GameObject[] ArPrefabs;
-    private readonly Dictionary<string, GameObject> _instantiatedPrefabs = 
-        new Dictionary<string, GameObject>();
+// [RequireComponent(typeof(ARTrackedImageManager))]
+// public class PlaceTrackedImages : MonoBehaviour {
+//     private ARTrackedImageManager _trackedImagesManager;
+//     public GameObject[] ArPrefabs;
+//     private readonly Dictionary<string, GameObject> _instantiatedPrefabs = 
+//         new Dictionary<string, GameObject>();
 
-    void Awake(){
-        _trackedImagesManager = GetComponent<ARTrackedImageManager>();
-    }
+//     void Awake(){
+//         _trackedImagesManager = GetComponent<ARTrackedImageManager>();
+//     }
 
-    void OnEnable(){
-        _trackedImagesManager._trackedImagesChanged += OnTrackedImagesChanged;
-    }
-        void OnDisable(){
-        _trackedImagesManager._trackedImagesChanged -= OnTrackedImagesChanged;
-    }
+//     void OnEnable(){
+//         _trackedImagesManager._trackedImagesChanged += OnTrackedImagesChanged;
+//     }
+//         void OnDisable(){
+//         _trackedImagesManager._trackedImagesChanged -= OnTrackedImagesChanged;
+//     }
 
-    private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs){
-        foreach (var trackedImage in eventArgs.added){
-            var imageName = trackedImage.referenceImage.name;
-            foreach (var curPrefab in ArPrefabs){
-                if ( string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0
-                    && !_instantiatedPrefabs.ContainKey(imageName)){
-                        var newPrefab = Instantiate(curPrefab, trackedImage.transform);
-                        _instantiatedPrefabs[imageName] = newPrefab;
-                    }
-            }
-        }
+//     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs){
+//         foreach (var trackedImage in eventArgs.added){
+//             var imageName = trackedImage.referenceImage.name;
+//             foreach (var curPrefab in ArPrefabs){
+//                 if ( string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0
+//                     && !_instantiatedPrefabs.ContainKey(imageName)){
+//                         var newPrefab = Instantiate(curPrefab, trackedImage.transform);
+//                         _instantiatedPrefabs[imageName] = newPrefab;
+//                     }
+//             }
+//         }
 
-        foreach(var trackedImage in eventArgs.updated){
-            _instantiatedPrefabs[trackedImage.referenceImage.name]
-                .SetActive(trackedImage.trackingState == TrackingState.Tracking);
-        }
+//         foreach(var trackedImage in eventArgs.updated){
+//             _instantiatedPrefabs[trackedImage.referenceImage.name]
+//                 .SetActive(trackedImage.trackingState == TrackingState.Tracking);
+//         }
 
-        foreach (var trackedImage in eventArgs.removed){
-            Destory(_instantiatedPrefabs[trackedImage.referenceImage.name]);
-            _instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
-        }
-    }
-}
-
-
+//         foreach (var trackedImage in eventArgs.removed){
+//             Destory(_instantiatedPrefabs[trackedImage.referenceImage.name]);
+//             _instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
+//         }
+//     }
+// }
 
 
 
-/*
+
+
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,54 +69,49 @@ public class PlaceTrackedImages : MonoBehaviour
 
 
     private readonly Dictionary<string, GameObject> _instantiatedPrefabs = new Dictionary<string, GameObject>();
-    //  foreach(var trackedImage in eventArgs.added){
-    // Get the name of the reference image
-    //   var imageName = trackedImage.referenceImage.name;
-    //   foreach (var curPrefab in ArPrefabs) {
-    // Check whether this prefab matches the tracked image name, and that
-    // the prefab hasn't already been created
-    //  if (string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0
-    //   && !_instantiatedPrefabs.ContainsKey(imageName)){
-    // Instantiate the prefab, parenting it to the ARTrackedImage
-    //  var newPrefab = Instantiate(curPrefab, trackedImage.transform);
-     void Awake()
-    {
+    
+    void Awake(){
         _trackedImagesManager = GetComponent<ARTrackedImageManager>();
     }
-    private void OnEnable()
-    {
+    private void OnEnable(){
         _trackedImagesManager.trackedImagesChanged += OnTrackedImagesChanged;
     }
-    private void OnDisable()
-    {
+    private void OnDisable(){
         _trackedImagesManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
-    private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
-    {
-        foreach (var trackedImage in eventArgs.updated)
-        {
-            // var imageName = trackedImage.referenceImage.name;
-            //foreach (var curPrefab in AreaEffector2DPrefabs)
-            // {
-            // if (string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0
-            //  && !_instantiatedPrefabs.ContainsKey(imageName))
-            //  {
-            //  var newPrefab = Instantiate(curPrefab, trackedImage.transform);
-            //   _instantiatedPrefabs[imageName] = newPrefab;
-            // }
-            // }
-            // }
-            _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(trackedImage.trackingState == TrackingState.Tracking);
+    private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs){
+        
+        foreach(var trackedImage in eventArgs.added){
+        //Get the name of the reference image
+        var imageName = trackedImage.referenceImage.name;
+            foreach (var curPrefab in ArPrefabs) {
+            //Check whether this prefab matches the tracked image name, and that
+            //the prefab hasn't already been created
+                if (string.Compare(curPrefab.name, imageName, StringComparison.OrdinalIgnoreCase) == 0
+                && !_instantiatedPrefabs.ContainsKey(imageName)){
+            // Instantiate the prefab, parenting it to the ARTrackedImage
+                var newPrefab = Instantiate(curPrefab, trackedImage.transform);
+                _instantiatedPrefabs[imageName] = newPrefab;
+                }
+            }
         }
-
-
-        foreach (var trackedImage in eventArgs.removed) {
-            // Destroy its prefab
-            Destroy(_instantiatedPrefabs[trackedImage.referenceImage.name]);
-            // Also remove the instance from our array
-            _instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
-            // Or, simply set the prefab instance to inactive
-            //_instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
+        
+        foreach(var trackedImage in eventArgs.updated){
+            _instantiatedPrefabs[trackedImage.referenceImage.name]
+                .SetActive(trackedImage.trackingState == TrackingState.Tracking);
         }
+           // _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(trackedImage.trackingState == TrackingState.Tracking);
+
+        foreach (var trackedImage in eventArgs.removed){
+        // Destroy its prefab
+        Destroy(_instantiatedPrefabs[trackedImage.referenceImage.name]);
+        // Also remove the instance from our array
+        _instantiatedPrefabs.Remove(trackedImage.referenceImage.name);
+        // Or, simply set the prefab instance to inactive
+       // _instantiatedPrefabs[trackedImage.referenceImage.name].SetActive(false);
     }
-}*/
+    }
+
+
+    
+}
